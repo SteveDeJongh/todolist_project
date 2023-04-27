@@ -1,9 +1,24 @@
+require "rake/testtask"
+require 'find'
+
 desc 'Say hello'
 task :hello do
   puts "Hello there. This is the 'hello' task."
 end
 
 desc 'Run tests'
-task :test do
-  sh 'ruby ./test/todolist_project_test.rb'
+task :default => :test
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList['test/**/*_test.rb']
+end
+
+desc 'Show files'
+task :files do
+  Find.find('.') do |name| # finds all files in current directory
+    next if name.include?('/.') # excludes files and directories with . names
+    puts name if File.file?(name)
+  end
 end
